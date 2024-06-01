@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 
 public class GUI implements ActionListener {
     private JFrame frame;
@@ -111,13 +112,13 @@ public class GUI implements ActionListener {
         JTextField comidaInicialField = new JTextField();
         panelDatos.add(comidaInicialField);
 
-        panelDatos.add(new JLabel("Día de incremento de comida:"));
-        JTextField diaIncrementoField = new JTextField();
-        panelDatos.add(diaIncrementoField);
+        panelDatos.add(new JLabel("Día máximo de comida:"));
+        JTextField diaMaximoField = new JTextField();
+        panelDatos.add(diaMaximoField);
 
-        panelDatos.add(new JLabel("Cantidad de comida en día de incremento:"));
-        JTextField comidaIncrementoField = new JTextField();
-        panelDatos.add(comidaIncrementoField);
+        panelDatos.add(new JLabel("Cantidad de comida en día máximo:"));
+        JTextField comidaMaximaField = new JTextField();
+        panelDatos.add(comidaMaximaField);
 
         panelDatos.add(new JLabel("Cantidad final de comida:"));
         JTextField comidaFinalField = new JTextField();
@@ -140,27 +141,17 @@ public class GUI implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 // Here, you can handle the input data
                 String nombre = nombreField.getText();
-                String inicio = inicioField.getText();
-                String fin = finField.getText();
+                Date inicio = Date.valueOf(inicioField.getText());
+                Date fin = Date.valueOf(finField.getText());
                 int numeroInicial = Integer.parseInt(numeroInicialField.getText());
-                double temperatura = Double.parseDouble(temperaturaField.getText());
-                String luminosidad = (String) luminosidadComboBox.getSelectedItem();
-                int comidaInicial = Integer.parseInt(comidaInicialField.getText());
-                int diaIncremento = Integer.parseInt(diaIncrementoField.getText());
-                int comidaIncremento = Integer.parseInt(comidaIncrementoField.getText());
-                int comidaFinal = Integer.parseInt(comidaFinalField.getText());
+                int temperatura = Integer.parseInt(temperaturaField.getText());
+                Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf((String)
+                        luminosidadComboBox.getSelectedItem());
+                Comida comida = new Comida(Integer.parseInt(comidaInicialField.getText()),
+                        Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
+                        Integer.parseInt(diaMaximoField.getText()));
 
-                // Print data to the console for now (replace this with your actual save logic)
-                System.out.println("Nombre: " + nombre);
-                System.out.println("Fecha de inicio: " + inicio);
-                System.out.println("Fecha de fin: " + fin);
-                System.out.println("Número inicial de bacterias: " + numeroInicial);
-                System.out.println("Temperatura: " + temperatura);
-                System.out.println("Condiciones de luminosidad: " + luminosidad);
-                System.out.println("Cantidad inicial de comida: " + comidaInicial);
-                System.out.println("Día de incremento de comida: " + diaIncremento);
-                System.out.println("Cantidad de comida en día de incremento: " + comidaIncremento);
-                System.out.println("Cantidad final de comida: " + comidaFinal);
+                Poblacion poblacion = new Poblacion(nombre, inicio, fin, numeroInicial, temperatura, luminosidad, comida);
             }
         });
 
