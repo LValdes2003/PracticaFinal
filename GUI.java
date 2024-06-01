@@ -88,11 +88,11 @@ public class GUI implements ActionListener {
         JTextField nombreField = new JTextField();
         panelDatos.add(nombreField);
 
-        panelDatos.add(new JLabel("Fecha de inicio:"));
+        panelDatos.add(new JLabel("Fecha de inicio (formato yyyy-mm-dd):"));
         JTextField inicioField = new JTextField();
         panelDatos.add(inicioField);
 
-        panelDatos.add(new JLabel("Fecha de fin:"));
+        panelDatos.add(new JLabel("Fecha de fin (formato yyyy-mm-dd):"));
         JTextField finField = new JTextField();
         panelDatos.add(finField);
 
@@ -145,8 +145,7 @@ public class GUI implements ActionListener {
                 Date fin = Date.valueOf(finField.getText());
                 int numeroInicial = Integer.parseInt(numeroInicialField.getText());
                 int temperatura = Integer.parseInt(temperaturaField.getText());
-                Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf((String)
-                        luminosidadComboBox.getSelectedItem());
+                Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf(((String) luminosidadComboBox.getSelectedItem()).toUpperCase());
                 Comida comida = new Comida(Integer.parseInt(comidaInicialField.getText()),
                         Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
                         Integer.parseInt(diaMaximoField.getText()));
