@@ -1,29 +1,29 @@
 public class Comida {
     public int dosisInicial;
-    public int dosisMedia;
+    public int dosisMaxima;
     public int dosisFinal;
-    public int diaMedio;
+    public int diaMaximo;
 
-    public Comida(int dosisInicial, int dosisMedia, int dosisFinal, int diaMedio) {
+    public Comida(int dosisInicial, int dosisMaxima, int dosisFinal, int diaMaximo) {
         if (dosisInicial < 0 || dosisInicial > 300 ||
-                dosisMedia < 0 || dosisMedia > 300 ||
+                dosisMaxima < 0 || dosisMaxima > 300 ||
                 dosisFinal < 0 || dosisFinal > 300) {
             throw new IllegalArgumentException("dosis debe estar entre 0 y 300");
         }
         this.dosisInicial = dosisInicial;
-        this.dosisMedia = dosisMedia;
+        this.dosisMaxima = dosisMaxima;
         this.dosisFinal = dosisFinal;
-        this.diaMedio = diaMedio;
+        this.diaMaximo = diaMaximo;
     }
 
     public int getDosis(int dia) {
         if (dia < 0 || dia > 30) {
             throw new IllegalArgumentException("dia debe estar entre 0 y 30");
         }
-        if (dia < diaMedio) {
-            return dosisInicial + (dosisMedia - dosisInicial) / (diaMedio - 1) * (dia - 1);
+        if (dia < diaMaximo) {
+            return dosisInicial + (dosisMaxima - dosisInicial) / (diaMaximo - 1) * (dia - 1);
         } else {
-            return dosisMedia + (dosisFinal - dosisMedia) / (30 - diaMedio) * (dia - diaMedio);
+            return dosisMaxima + (dosisFinal - dosisMaxima) / (30 - diaMaximo) * (dia - diaMaximo);
         }
     }
 
@@ -31,31 +31,32 @@ public class Comida {
         return dosisInicial;
     }
 
-    public int getDosisMedia() {
-        return dosisMedia;
+    public int getDosisMaxima() {
+        return dosisMaxima;
     }
 
     public int getDosisFinal() {
         return dosisFinal;
     }
 
-    public int getDiaMedio() {
-        return diaMedio;
+    public int getDiaMaximo() {
+        return diaMaximo;
     }
 
     public void setDosisInicial(int dosisInicial) {
         this.dosisInicial = dosisInicial;
     }
 
-    public void setDosisMedia(int dosisMedia) {
-        this.dosisMedia = dosisMedia;
+    public void setDosisMaxima(int dosisMaxima) {
+        this.dosisMaxima = dosisMaxima;
     }
 
     public void setDosisFinal(int dosisFinal) {
         this.dosisFinal = dosisFinal;
     }
 
-    public void setDiaMedio(int diaMedio) {
-        this.diaMedio = diaMedio;
+    public void setDiaMaximo(int diaMaximo) {
+        this.diaMaximo = diaMaximo;
     }
+
 }

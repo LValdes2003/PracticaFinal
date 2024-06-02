@@ -1,8 +1,8 @@
 import java.sql.Date;
-import java.time.LocalDate;
 
 public class Poblacion {
-    public enum Luminosidad { ALTA, MEDIA, BAJA }
+    public enum Luminosidad {ALTA, MEDIA, BAJA}
+
     public String nombre;
     public Date fechaComienzo;
     public Date fechaFin;
@@ -20,5 +20,20 @@ public class Poblacion {
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
         this.comida = comida;
+    }
+
+    public String[] toStringArray() {
+        return new String[]{
+                "Población: " + nombre,
+                "Fecha de comienzo: " + fechaComienzo,
+                "Fecha de fin: " + fechaFin,
+                "Bacteria inicial: " + bacteriaInicial,
+                "Temperatura: " + temperatura,
+                "Luminosidad: " + luminosidad,
+                "Comida inicial: " + comida.getDosisInicial(),
+                "Comida máxima: " + comida.getDosisMaxima(),
+                "Comida final: " + comida.getDosisFinal(),
+                "Día máximo de comida: " + comida.getDiaMaximo()
+        };
     }
 }

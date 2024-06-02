@@ -10,6 +10,7 @@ public class GUI implements ActionListener {
     private JButton cargarExperimento;
     private JButton guardarExperimento;
     private JPanel panelNuevoExperimento;
+    private Poblacion poblacion;
 
     public GUI() {
         frame = new JFrame("Experimentos de bacterias");
@@ -53,22 +54,14 @@ public class GUI implements ActionListener {
         panelNuevoExperimento.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JButton nuevaPoblacionButton = new JButton("Nueva población");
-        nuevaPoblacionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                datosExperimento();
-            }
-        });
+        nuevaPoblacionButton.addActionListener(e -> datosExperimento());
 
         JButton botonVolver = new JButton("Volver");
-        botonVolver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll();
-                frame.repaint();
-                frame.revalidate();
-                new GUI();
-            }
+        botonVolver.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            frame.repaint();
+            frame.revalidate();
+            new GUI();
         });
 
         panelNuevoExperimento.add(nuevaPoblacionButton);
@@ -93,10 +86,6 @@ public class GUI implements ActionListener {
         JTextField inicioField = new JTextField();
         panelDatos.add(inicioField);
 
-/*        panelDatos.add(new JLabel("Fecha de fin (formato yyyy-mm-dd):"));
-        JTextField finField = new JTextField();
-        panelDatos.add(finField); */
-
         panelDatos.add(new JLabel("Número inicial de bacterias:"));
         JTextField numeroInicialField = new JTextField();
         panelDatos.add(numeroInicialField);
@@ -113,10 +102,6 @@ public class GUI implements ActionListener {
         JTextField comidaInicialField = new JTextField();
         panelDatos.add(comidaInicialField);
 
-        panelDatos.add(new JLabel("Día máximo de comida:"));
-        JTextField diaMaximoField = new JTextField();
-        panelDatos.add(diaMaximoField);
-
         panelDatos.add(new JLabel("Cantidad de comida en día máximo:"));
         JTextField comidaMaximaField = new JTextField();
         panelDatos.add(comidaMaximaField);
@@ -124,6 +109,64 @@ public class GUI implements ActionListener {
         panelDatos.add(new JLabel("Cantidad final de comida:"));
         JTextField comidaFinalField = new JTextField();
         panelDatos.add(comidaFinalField);
+
+        panelDatos.add(new JLabel("Día máximo de comida:"));
+        JTextField diaMaximoField = new JTextField();
+        panelDatos.add(diaMaximoField);
+
+        JButton backButton = new JButton("Volver");
+        backButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            frame.repaint();
+            frame.revalidate();
+            nuevoExperimentoPanel();
+        });
+
+        JButton botonSubmit = new JButton("Submit");
+        botonSubmit.addActionListener(e -> {
+            String nombre = nombreField.getText();
+            Date inicio = Date.valueOf(inicioField.getText());
+            int numeroInicial = Integer.parseInt(numeroInicialField.getText());
+            int temperatura = Integer.parseInt(temperaturaField.getText());
+            Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf(((String) luminosidadComboBox.getSelectedItem()).toUpperCase());
+            Comida comida = new Comida(Integer.parseInt(comidaInicialField.getText()),
+                    Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
+                    Integer.parseInt(diaMaximoField.getText()));
+
+            poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida);
+
+            JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
+            JButton nombrePoblacion = new JButton(nombre);
+            nombrePoblacion.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panelPoblacion();
+                }
+            });
+
+            panelNuevoExperimento.add(nombrePoblacion);
+            frame.getContentPane().removeAll();
+            frame.add(panelNuevoExperimento);
+            frame.repaint();
+            frame.revalidate();
+        });
+
+        panelDatos.add(botonSubmit);
+        panelDatos.add(backButton);
+
+        frame.getContentPane().removeAll();
+        frame.add(panelDatos);
+        frame.repaint();
+        frame.revalidate();
+    }
+
+    private void panelPoblacion() {
+        JPanel panelPoblacion = new JPanel();
+        panelPoblacion.setLayout(new GridLayout(0, 1, 10, 10));
+        panelPoblacion.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        for (String s : poblacion.toStringArray()) {
+            panelPoblacion.add(new JLabel(s));
+        }
 
         JButton backButton = new JButton("Volver");
         backButton.addActionListener(new ActionListener() {
@@ -136,37 +179,19 @@ public class GUI implements ActionListener {
             }
         });
 
-        JButton botonSubmit = new JButton("Submit");
-        botonSubmit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String nombre = nombreField.getText();
-                Date inicio = Date.valueOf(inicioField.getText());
-//                Date fin = Date.valueOf(finField.getText());
-                int numeroInicial = Integer.parseInt(numeroInicialField.getText());
-                int temperatura = Integer.parseInt(temperaturaField.getText());
-                Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf(((String) luminosidadComboBox.getSelectedItem()).toUpperCase());
-                Comida comida = new Comida(Integer.parseInt(comidaInicialField.getText()),
-                        Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
-                        Integer.parseInt(diaMaximoField.getText()));
-
-                Poblacion poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida);
-
-                JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
-                panelNuevoExperimento.add(new JButton(nombre));
-                frame.getContentPane().removeAll();
-                frame.add(panelNuevoExperimento);
-                frame.repaint();
-                frame.revalidate();
-            }
-        });
-
-        panelDatos.add(botonSubmit);
-        panelDatos.add(backButton);
+        panelPoblacion.add(backButton);
 
         frame.getContentPane().removeAll();
-        frame.add(panelDatos);
+        frame.add(panelPoblacion);
         frame.repaint();
         frame.revalidate();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new GUI();
+            }
+        });
     }
 }
