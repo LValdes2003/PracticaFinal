@@ -9,6 +9,7 @@ public class GUI implements ActionListener {
     private JButton nuevoExperimento;
     private JButton cargarExperimento;
     private JButton guardarExperimento;
+    private JPanel panelNuevoExperimento;
 
     public GUI() {
         frame = new JFrame("Experimentos de bacterias");
@@ -47,7 +48,7 @@ public class GUI implements ActionListener {
     }
 
     private void nuevoExperimentoPanel() {
-        JPanel panelNuevoExperimento = new JPanel();
+        panelNuevoExperimento = new JPanel();
         panelNuevoExperimento.setLayout(new GridLayout(0, 1, 10, 10));
         panelNuevoExperimento.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -59,8 +60,8 @@ public class GUI implements ActionListener {
             }
         });
 
-        JButton backButton = new JButton("Volver");
-        backButton.addActionListener(new ActionListener() {
+        JButton botonVolver = new JButton("Volver");
+        botonVolver.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.getContentPane().removeAll();
@@ -71,7 +72,7 @@ public class GUI implements ActionListener {
         });
 
         panelNuevoExperimento.add(nuevaPoblacionButton);
-        panelNuevoExperimento.add(backButton);
+        panelNuevoExperimento.add(botonVolver);
 
         frame.getContentPane().removeAll();
         frame.add(panelNuevoExperimento);
@@ -92,9 +93,9 @@ public class GUI implements ActionListener {
         JTextField inicioField = new JTextField();
         panelDatos.add(inicioField);
 
-        panelDatos.add(new JLabel("Fecha de fin (formato yyyy-mm-dd):"));
+/*        panelDatos.add(new JLabel("Fecha de fin (formato yyyy-mm-dd):"));
         JTextField finField = new JTextField();
-        panelDatos.add(finField);
+        panelDatos.add(finField); */
 
         panelDatos.add(new JLabel("Número inicial de bacterias:"));
         JTextField numeroInicialField = new JTextField();
@@ -131,18 +132,17 @@ public class GUI implements ActionListener {
                 frame.getContentPane().removeAll();
                 frame.repaint();
                 frame.revalidate();
-                new GUI();
+                nuevoExperimentoPanel();
             }
         });
 
-        JButton submitButton = new JButton("Guardar datos del experimento");
-        submitButton.addActionListener(new ActionListener() {
+        JButton botonSubmit = new JButton("Submit");
+        botonSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Here, you can handle the input data
                 String nombre = nombreField.getText();
                 Date inicio = Date.valueOf(inicioField.getText());
-                Date fin = Date.valueOf(finField.getText());
+//                Date fin = Date.valueOf(finField.getText());
                 int numeroInicial = Integer.parseInt(numeroInicialField.getText());
                 int temperatura = Integer.parseInt(temperaturaField.getText());
                 Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf(((String) luminosidadComboBox.getSelectedItem()).toUpperCase());
@@ -150,24 +150,23 @@ public class GUI implements ActionListener {
                         Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
                         Integer.parseInt(diaMaximoField.getText()));
 
-                Poblacion poblacion = new Poblacion(nombre, inicio, fin, numeroInicial, temperatura, luminosidad, comida);
+                Poblacion poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida);
+
+                JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
+                panelNuevoExperimento.add(new JButton(nombre));
+                frame.getContentPane().removeAll();
+                frame.add(panelNuevoExperimento);
+                frame.repaint();
+                frame.revalidate();
             }
         });
 
-        panelDatos.add(submitButton);
+        panelDatos.add(botonSubmit);
         panelDatos.add(backButton);
 
         frame.getContentPane().removeAll();
         frame.add(panelDatos);
         frame.repaint();
         frame.revalidate();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new GUI();
-            }
-        });
     }
 }

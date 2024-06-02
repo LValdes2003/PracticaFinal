@@ -1,4 +1,5 @@
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class Poblacion {
     public enum Luminosidad { ALTA, MEDIA, BAJA }
@@ -10,11 +11,11 @@ public class Poblacion {
     public Luminosidad luminosidad;
     public Comida comida;
 
-    public Poblacion(String nombre, Date fechaComienzo, Date fechaFin, int bacteriaInicial,
+    public Poblacion(String nombre, Date fechaComienzo, int bacteriaInicial,
                      int temperatura, Luminosidad luminosidad, Comida comida) {
         this.nombre = nombre;
         this.fechaComienzo = fechaComienzo;
-        this.fechaFin = fechaFin;
+        this.fechaFin = Date.valueOf(fechaComienzo.toLocalDate().plusDays(30));
         this.bacteriaInicial = bacteriaInicial;
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
