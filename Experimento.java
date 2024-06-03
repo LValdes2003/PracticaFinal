@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 
 public class Experimento implements java.io.Serializable {
-    public Poblacion[] poblaciones = {};
+    public ArrayList<Poblacion> poblaciones;
 
-    public Experimento(Poblacion[] poblaciones) {
+    public Experimento(ArrayList<Poblacion> poblaciones) {
         this.poblaciones = poblaciones;
     }
 }

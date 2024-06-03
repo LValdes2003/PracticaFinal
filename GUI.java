@@ -3,15 +3,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class GUI implements ActionListener {
     private JFrame frame;
     private JButton nuevoExperimento;
     private JButton cargarExperimento;
-    private JButton guardarExperimento;
+    private JButton botonNombreExperimento;
     private JPanel panelNuevoExperimento;
     private JPanel panelCargarExperimento;
     private Poblacion poblacion;
+    private ArrayList<Poblacion> poblacionesGUI = new ArrayList<>();
     private String nombreExperimento = "";
 
 
@@ -22,7 +24,6 @@ public class GUI implements ActionListener {
 
         nuevoExperimento = new JButton("Nuevo experimento");
         cargarExperimento = new JButton("Cargar experimento");
-//        guardarExperimento = new JButton("Guardar experimento");
 
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
         panel.setLayout(new GridLayout(0, 1));
@@ -34,11 +35,9 @@ public class GUI implements ActionListener {
 
         panel.add(nuevoExperimento);
         panel.add(cargarExperimento);
-//        panel.add(guardarExperimento);
 
         nuevoExperimento.addActionListener(this);
         cargarExperimento.addActionListener(this);
-//        guardarExperimento.addActionListener(this);
     }
 
     @Override
@@ -48,9 +47,6 @@ public class GUI implements ActionListener {
         } else if (e.getSource() == cargarExperimento) {
             cargarExperimentoPanel();
             }
-/*        } else if (e.getSource() == guardarExperimento) {
-            System.out.println("Guardar experimento");
-        }*/
     }
 
     private void nuevoExperimentoPanel() {
@@ -59,18 +55,18 @@ public class GUI implements ActionListener {
         panelNuevoExperimento.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JTextField nombreField = new JTextField();
-        panelNuevoExperimento.add(new JLabel("Nombre del experimento:"));
-        panelNuevoExperimento.add(nombreField);
-        
-        nombreField.addActionListener(e -> nombreExperimento = nombreField.getText());
+
+
+        botonNombreExperimento = new JButton("Confirmar nombre");
+        botonNombreExperimento.addActionListener(e -> nombreExperimento = nombreField.getText());
 
         JButton nuevaPoblacionButton = new JButton("Nueva población");
-        nuevaPoblacionButton.addActionListener(e -> datosExperimento());
+        nuevaPoblacionButton.addActionListener(e -> datosPoblacion());
 
         JButton botonGuardar = new JButton("Guardar");
         botonGuardar.addActionListener(e -> {
             GestorArchivos gestorArchivos = new GestorArchivos();
-            Experimento experimento = new Experimento(new Poblacion[]{poblacion});
+            Experimento experimento = new Experimento(poblacionesGUI);
             gestorArchivos.guardarExperimento(experimento, nombreExperimento + ".ser");
             JOptionPane.showMessageDialog(frame, "Experimento guardado", " ", JOptionPane.INFORMATION_MESSAGE);
         });
@@ -83,6 +79,9 @@ public class GUI implements ActionListener {
             new GUI();
         });
 
+        panelNuevoExperimento.add(new JLabel("Nombre del experimento:"));
+        panelNuevoExperimento.add(nombreField);
+        panelNuevoExperimento.add(botonNombreExperimento);
         panelNuevoExperimento.add(nuevaPoblacionButton);
         panelNuevoExperimento.add(botonGuardar);
         panelNuevoExperimento.add(botonVolver);
@@ -134,12 +133,6 @@ public class GUI implements ActionListener {
 
                     nombrePoblacion.addActionListener(e1 -> panelPoblacion());
                 }
-                /*nombrePoblacion.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        panelPoblacion();
-                    }
-                });*/
 
             } else {
                 JOptionPane.showMessageDialog(frame, "Error al cargar experimento", " ", JOptionPane.ERROR_MESSAGE);
@@ -148,7 +141,7 @@ public class GUI implements ActionListener {
         return botonCargar;
     }
 
-    private void datosExperimento() {
+    private void datosPoblacion() {
         JPanel panelDatos = new JPanel();
         panelDatos.setLayout(new GridLayout(0, 2, 10, 10));
         panelDatos.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -197,8 +190,8 @@ public class GUI implements ActionListener {
             nuevoExperimentoPanel();
         });
 
-        JButton botonSubmit = new JButton("Submit");
-        botonSubmit.addActionListener(e -> {
+        JButton botonConfirmar = new JButton("Confirmar");
+        botonConfirmar.addActionListener(e -> {
             String nombre = nombreField.getText();
             Date inicio = Date.valueOf(inicioField.getText());
             int numeroInicial = Integer.parseInt(numeroInicialField.getText());
@@ -209,6 +202,7 @@ public class GUI implements ActionListener {
                     Integer.parseInt(diaMaximoField.getText()));
 
             poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida);
+            poblacionesGUI.add(poblacion);
 
             JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
             JButton nombrePoblacion = new JButton(nombre);
@@ -221,7 +215,7 @@ public class GUI implements ActionListener {
             frame.revalidate();
         });
 
-        panelDatos.add(botonSubmit);
+        panelDatos.add(botonConfirmar);
         panelDatos.add(backButton);
 
         frame.getContentPane().removeAll();
