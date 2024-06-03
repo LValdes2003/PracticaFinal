@@ -10,6 +10,7 @@ public class GUI implements ActionListener {
     private JButton cargarExperimento;
     private JButton guardarExperimento;
     private JPanel panelNuevoExperimento;
+    private JPanel panelCargarExperimento;
     private Poblacion poblacion;
 
     public GUI() {
@@ -18,7 +19,7 @@ public class GUI implements ActionListener {
 
         nuevoExperimento = new JButton("Nuevo experimento");
         cargarExperimento = new JButton("Cargar experimento");
-        guardarExperimento = new JButton("Guardar experimento");
+//        guardarExperimento = new JButton("Guardar experimento");
 
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
         panel.setLayout(new GridLayout(0, 1));
@@ -30,11 +31,11 @@ public class GUI implements ActionListener {
 
         panel.add(nuevoExperimento);
         panel.add(cargarExperimento);
-        panel.add(guardarExperimento);
+//        panel.add(guardarExperimento);
 
         nuevoExperimento.addActionListener(this);
         cargarExperimento.addActionListener(this);
-        guardarExperimento.addActionListener(this);
+//        guardarExperimento.addActionListener(this);
     }
 
     @Override
@@ -42,10 +43,11 @@ public class GUI implements ActionListener {
         if (e.getSource() == nuevoExperimento) {
             nuevoExperimentoPanel();
         } else if (e.getSource() == cargarExperimento) {
-            System.out.println("Cargar experimento");
-        } else if (e.getSource() == guardarExperimento) {
+            cargarExperimentoPanel();
+            }
+/*        } else if (e.getSource() == guardarExperimento) {
             System.out.println("Guardar experimento");
-        }
+        }*/
     }
 
     private void nuevoExperimentoPanel() {
@@ -56,6 +58,14 @@ public class GUI implements ActionListener {
         JButton nuevaPoblacionButton = new JButton("Nueva población");
         nuevaPoblacionButton.addActionListener(e -> datosExperimento());
 
+        JButton botonGuardar = new JButton("Guardar");
+        botonGuardar.addActionListener(e -> {
+            GestorArchivos gestorArchivos = new GestorArchivos();
+            Experimento experimento = new Experimento(new Poblacion[]{poblacion});
+            gestorArchivos.guardarExperimento(experimento, poblacion.nombre + ".ser");
+            JOptionPane.showMessageDialog(frame, "Experimento guardado", " ", JOptionPane.INFORMATION_MESSAGE);
+        });
+
         JButton botonVolver = new JButton("Volver");
         botonVolver.addActionListener(e -> {
             frame.getContentPane().removeAll();
@@ -65,10 +75,66 @@ public class GUI implements ActionListener {
         });
 
         panelNuevoExperimento.add(nuevaPoblacionButton);
+        panelNuevoExperimento.add(botonGuardar);
         panelNuevoExperimento.add(botonVolver);
 
         frame.getContentPane().removeAll();
         frame.add(panelNuevoExperimento);
+        frame.repaint();
+        frame.revalidate();
+    }
+
+    private void cargarExperimentoPanel() {
+        panelCargarExperimento = new JPanel();
+        panelCargarExperimento.setLayout(new GridLayout(0, 1, 10, 10));
+        panelCargarExperimento.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        panelCargarExperimento.add(new JLabel("Introduce nombre de archivo:"));
+        JTextField nombreArchivoField = new JTextField();
+        panelCargarExperimento.add(nombreArchivoField);
+
+        JButton botonCargar = new JButton("Cargar");
+        botonCargar.addActionListener(e -> {
+            GestorArchivos gestorArchivos = new GestorArchivos();
+            Experimento experimento = gestorArchivos.cargarExperimento(nombreArchivoField.getText());
+            if (experimento != null) {
+                JOptionPane.showMessageDialog(frame, "Experimento cargado", " ", JOptionPane.INFORMATION_MESSAGE);
+                for(Poblacion poblacion : experimento.poblaciones) {
+                    JButton nombrePoblacion = new JButton(poblacion.nombre);
+                    panelCargarExperimento.add(nombrePoblacion);
+
+                    nombrePoblacion.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            panelPoblacion();
+                        }
+                    });
+                }
+                /*nombrePoblacion.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        panelPoblacion();
+                    }
+                });*/
+
+            } else {
+                JOptionPane.showMessageDialog(frame, "Error al cargar experimento", " ", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        JButton botonVolver = new JButton("Volver");
+        botonVolver.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            frame.repaint();
+            frame.revalidate();
+            new GUI();
+        });
+
+        panelCargarExperimento.add(botonCargar);
+        panelCargarExperimento.add(botonVolver);
+
+        frame.getContentPane().removeAll();
+        frame.add(panelCargarExperimento);
         frame.repaint();
         frame.revalidate();
     }

@@ -1,6 +1,6 @@
 import java.sql.Date;
 
-public class Poblacion {
+public class Poblacion implements java.io.Serializable{
     public enum Luminosidad {ALTA, MEDIA, BAJA}
 
     public String nombre;

@@ -1,4 +1,4 @@
-public class Comida {
+public class Comida implements java.io.Serializable{
     public int dosisInicial;
     public int dosisMaxima;
     public int dosisFinal;
