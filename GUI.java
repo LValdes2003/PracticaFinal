@@ -12,6 +12,9 @@ public class GUI implements ActionListener {
     private JPanel panelNuevoExperimento;
     private JPanel panelCargarExperimento;
     private Poblacion poblacion;
+    private String nombreExperimento = "";
+
+
 
     public GUI() {
         frame = new JFrame("Experimentos de bacterias");
@@ -55,6 +58,12 @@ public class GUI implements ActionListener {
         panelNuevoExperimento.setLayout(new GridLayout(0, 1, 10, 10));
         panelNuevoExperimento.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+        JTextField nombreField = new JTextField();
+        panelNuevoExperimento.add(new JLabel("Nombre del experimento:"));
+        panelNuevoExperimento.add(nombreField);
+        
+        nombreField.addActionListener(e -> nombreExperimento = nombreField.getText());
+
         JButton nuevaPoblacionButton = new JButton("Nueva población");
         nuevaPoblacionButton.addActionListener(e -> datosExperimento());
 
@@ -62,7 +71,7 @@ public class GUI implements ActionListener {
         botonGuardar.addActionListener(e -> {
             GestorArchivos gestorArchivos = new GestorArchivos();
             Experimento experimento = new Experimento(new Poblacion[]{poblacion});
-            gestorArchivos.guardarExperimento(experimento, poblacion.nombre + ".ser");
+            gestorArchivos.guardarExperimento(experimento, nombreExperimento + ".ser");
             JOptionPane.showMessageDialog(frame, "Experimento guardado", " ", JOptionPane.INFORMATION_MESSAGE);
         });
 
@@ -93,34 +102,7 @@ public class GUI implements ActionListener {
         JTextField nombreArchivoField = new JTextField();
         panelCargarExperimento.add(nombreArchivoField);
 
-        JButton botonCargar = new JButton("Cargar");
-        botonCargar.addActionListener(e -> {
-            GestorArchivos gestorArchivos = new GestorArchivos();
-            Experimento experimento = gestorArchivos.cargarExperimento(nombreArchivoField.getText());
-            if (experimento != null) {
-                JOptionPane.showMessageDialog(frame, "Experimento cargado", " ", JOptionPane.INFORMATION_MESSAGE);
-                for(Poblacion poblacion : experimento.poblaciones) {
-                    JButton nombrePoblacion = new JButton(poblacion.nombre);
-                    panelCargarExperimento.add(nombrePoblacion);
-
-                    nombrePoblacion.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            panelPoblacion();
-                        }
-                    });
-                }
-                /*nombrePoblacion.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        panelPoblacion();
-                    }
-                });*/
-
-            } else {
-                JOptionPane.showMessageDialog(frame, "Error al cargar experimento", " ", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        JButton botonCargar = getjButton(nombreArchivoField);
 
         JButton botonVolver = new JButton("Volver");
         botonVolver.addActionListener(e -> {
@@ -137,6 +119,33 @@ public class GUI implements ActionListener {
         frame.add(panelCargarExperimento);
         frame.repaint();
         frame.revalidate();
+    }
+
+    private JButton getjButton(JTextField nombreArchivoField) {
+        JButton botonCargar = new JButton("Cargar");
+        botonCargar.addActionListener(e -> {
+            GestorArchivos gestorArchivos = new GestorArchivos();
+            Experimento experimento = gestorArchivos.cargarExperimento(nombreArchivoField.getText());
+            if (experimento != null) {
+                JOptionPane.showMessageDialog(frame, "Experimento cargado", " ", JOptionPane.INFORMATION_MESSAGE);
+                for(Poblacion poblacion : experimento.poblaciones) {
+                    JButton nombrePoblacion = new JButton(poblacion.nombre);
+                    panelCargarExperimento.add(nombrePoblacion);
+
+                    nombrePoblacion.addActionListener(e1 -> panelPoblacion());
+                }
+                /*nombrePoblacion.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        panelPoblacion();
+                    }
+                });*/
+
+            } else {
+                JOptionPane.showMessageDialog(frame, "Error al cargar experimento", " ", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        return botonCargar;
     }
 
     private void datosExperimento() {
@@ -203,12 +212,7 @@ public class GUI implements ActionListener {
 
             JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
             JButton nombrePoblacion = new JButton(nombre);
-            nombrePoblacion.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    panelPoblacion();
-                }
-            });
+            nombrePoblacion.addActionListener(e1 -> panelPoblacion());
 
             panelNuevoExperimento.add(nombrePoblacion);
             frame.getContentPane().removeAll();
@@ -235,14 +239,11 @@ public class GUI implements ActionListener {
         }
 
         JButton backButton = new JButton("Volver");
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.getContentPane().removeAll();
-                frame.repaint();
-                frame.revalidate();
-                nuevoExperimentoPanel();
-            }
+        backButton.addActionListener(e -> {
+            frame.getContentPane().removeAll();
+            frame.repaint();
+            frame.revalidate();
+            nuevoExperimentoPanel();
         });
 
         panelPoblacion.add(backButton);
@@ -254,10 +255,6 @@ public class GUI implements ActionListener {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new GUI();
-            }
-        });
+        SwingUtilities.invokeLater(GUI::new);
     }
 }
