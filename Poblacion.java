@@ -10,16 +10,18 @@ public class Poblacion implements java.io.Serializable{
     public int temperatura;
     public Luminosidad luminosidad;
     public Comida comida;
+    public int duracion;
 
     public Poblacion(String nombre, Date fechaComienzo, int bacteriaInicial,
-                     int temperatura, Luminosidad luminosidad, Comida comida) {
+                     int temperatura, Luminosidad luminosidad, Comida comida, int duracion) {
         this.nombre = nombre;
         this.fechaComienzo = fechaComienzo;
-        this.fechaFin = Date.valueOf(fechaComienzo.toLocalDate().plusDays(30));
+        this.fechaFin = Date.valueOf(fechaComienzo.toLocalDate().plusDays(duracion));
         this.bacteriaInicial = bacteriaInicial;
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
         this.comida = comida;
+        this.duracion = duracion;
     }
 
     public String[] toStringArray() {
@@ -33,7 +35,21 @@ public class Poblacion implements java.io.Serializable{
                 "Comida inicial: " + comida.getDosisInicial(),
                 "Comida máxima: " + comida.getDosisMaxima(),
                 "Comida final: " + comida.getDosisFinal(),
-                "Día máximo de comida: " + comida.getDiaMaximo()
+                "Día máximo de comida: " + comida.getDiaMaximo(),
+                "Duración: " + duracion + " días"
         };
+    }
+
+    public int getDosis(Date fecha) {
+        if (fecha.before(fechaComienzo) || fecha.after(fechaFin)) {
+            throw new IllegalArgumentException("Fecha fuera de rango");
+        }
+        int dia = (int) (fecha.toLocalDate().toEpochDay() - fechaComienzo.toLocalDate().toEpochDay()) + 1;
+
+        if (fecha.before(Date.valueOf(fechaComienzo.toLocalDate().plusDays(comida.diaMaximo)))) {
+            return comida.dosisInicial + (comida.dosisMaxima - comida.dosisInicial) / (comida.diaMaximo - 1) * (dia - 1);
+        } else {
+            return comida.dosisMaxima + (comida.dosisFinal - comida.dosisMaxima) / (30 - comida.diaMaximo) * (dia - comida.diaMaximo);
+        }
     }
 }

@@ -158,6 +158,10 @@ public class GUI implements ActionListener {
         JTextField inicioField = new JTextField();
         panelDatos.add(inicioField);
 
+        panelDatos.add(new JLabel("Duración (días):"));
+        JTextField duracionField = new JTextField();
+        panelDatos.add(duracionField);
+
         panelDatos.add(new JLabel("Número inicial de bacterias:"));
         JTextField numeroInicialField = new JTextField();
         panelDatos.add(numeroInicialField);
@@ -204,8 +208,9 @@ public class GUI implements ActionListener {
             Comida comida = new Comida(Integer.parseInt(comidaInicialField.getText()),
                     Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
                     Integer.parseInt(diaMaximoField.getText()));
+            int duracion = Integer.parseInt(duracionField.getText());
 
-            poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida);
+            poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida, duracion);
             poblacionesGUI.add(poblacion);
 
             JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
@@ -235,6 +240,20 @@ public class GUI implements ActionListener {
         for (String s : poblacion.toStringArray()) {
             panelPoblacion.add(new JLabel(s));
         }
+
+        JLabel label = new JLabel("Dosis de comida en un día (formato yyyy-mm-dd):");
+        JTextField fechaField = new JTextField();
+        panelPoblacion.add(label);
+        panelPoblacion.add(fechaField);
+
+        JButton botonDosis = new JButton("Calcular dosis");
+        botonDosis.addActionListener(e -> {
+            Date fecha = Date.valueOf(fechaField.getText());
+            int dosis = poblacion.getDosis(fecha);
+            JOptionPane.showMessageDialog(frame, "Dosis: " + dosis, " ", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        panelPoblacion.add(botonDosis);
 
         JButton backButton = new JButton("Volver");
         backButton.addActionListener(e -> {
