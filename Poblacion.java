@@ -14,8 +14,8 @@ public class Poblacion implements java.io.Serializable{
     public Luminosidad luminosidad;
     public SuministroComida suministroComida;
 
-    public Poblacion(String nombre, Date fechaComienzo, int bacteriaInicial,
-                     int temperatura, Comida comida, int duracion, Luminosidad luminosidad, SuministroComida suministroComida) {
+    public Poblacion(String nombre, Date fechaComienzo, int bacteriaInicial, int temperatura, Comida comida,
+                     int duracion, Luminosidad luminosidad, SuministroComida suministroComida) {
         this.nombre = nombre;
         this.fechaComienzo = fechaComienzo;
         this.fechaFin = Date.valueOf(fechaComienzo.toLocalDate().plusDays(duracion));
