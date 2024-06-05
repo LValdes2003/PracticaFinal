@@ -2,26 +2,29 @@ import java.sql.Date;
 
 public class Poblacion implements java.io.Serializable{
     public enum Luminosidad {ALTA, MEDIA, BAJA}
+    public enum SuministroComida {INCREMENTO_DECREMENTO, CONSTANTE, INCREMENTO, CADA_2_DIAS}
 
     public String nombre;
     public Date fechaComienzo;
     public Date fechaFin;
     public int bacteriaInicial;
     public int temperatura;
-    public Luminosidad luminosidad;
     public Comida comida;
     public int duracion;
+    public Luminosidad luminosidad;
+    public SuministroComida suministroComida;
 
     public Poblacion(String nombre, Date fechaComienzo, int bacteriaInicial,
-                     int temperatura, Luminosidad luminosidad, Comida comida, int duracion) {
+                     int temperatura, Comida comida, int duracion, Luminosidad luminosidad, SuministroComida suministroComida) {
         this.nombre = nombre;
         this.fechaComienzo = fechaComienzo;
         this.fechaFin = Date.valueOf(fechaComienzo.toLocalDate().plusDays(duracion));
         this.bacteriaInicial = bacteriaInicial;
         this.temperatura = temperatura;
-        this.luminosidad = luminosidad;
         this.comida = comida;
         this.duracion = duracion;
+        this.luminosidad = luminosidad;
+        this.suministroComida = suministroComida;
     }
 
     public String[] toStringArray() {
@@ -46,10 +49,20 @@ public class Poblacion implements java.io.Serializable{
         }
         int dia = (int) (fecha.toLocalDate().toEpochDay() - fechaComienzo.toLocalDate().toEpochDay()) + 1;
 
-        if (fecha.before(Date.valueOf(fechaComienzo.toLocalDate().plusDays(comida.diaMaximo)))) {
-            return comida.dosisInicial + (comida.dosisMaxima - comida.dosisInicial) / (comida.diaMaximo - 1) * (dia - 1);
+        if (suministroComida == SuministroComida.CONSTANTE) {
+            return comida.dosisInicial;
+        } else if (suministroComida == SuministroComida.INCREMENTO) {
+            return comida.dosisInicial + (comida.dosisFinal - comida.dosisInicial) / (duracion - 1) * (dia - 1);
+        } else if (suministroComida == SuministroComida.INCREMENTO_DECREMENTO) {
+            if (fecha.before(Date.valueOf(fechaComienzo.toLocalDate().plusDays(comida.diaMaximo)))) {
+                return comida.dosisInicial + (comida.dosisMaxima - comida.dosisInicial) / (comida.diaMaximo - 1) * (dia - 1);
+            } else {
+                return comida.dosisMaxima + (comida.dosisFinal - comida.dosisMaxima) / (30 - comida.diaMaximo) * (dia - comida.diaMaximo);
+            }
+        } else if (suministroComida == SuministroComida.CADA_2_DIAS) {
+            return dia % 2 == 0 ? 0 : comida.dosisInicial;
         } else {
-            return comida.dosisMaxima + (comida.dosisFinal - comida.dosisMaxima) / (30 - comida.diaMaximo) * (dia - comida.diaMaximo);
+            throw new IllegalArgumentException("Tipo de suministro de comida no reconocido");
         }
     }
 }

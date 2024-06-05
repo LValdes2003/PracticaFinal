@@ -171,8 +171,12 @@ public class GUI implements ActionListener {
         panelDatos.add(temperaturaField);
 
         panelDatos.add(new JLabel("Condiciones de luminosidad:"));
-        JComboBox<String> luminosidadComboBox = new JComboBox<>(new String[]{"Alta", "Media", "Baja"});
+        JComboBox<String> luminosidadComboBox = new JComboBox<>(new String[]{"ALTA", "MEDIA", "BAJA"});
         panelDatos.add(luminosidadComboBox);
+
+        panelDatos.add(new JLabel("Suministro de comida:"));
+        JComboBox<String> suministroComidaComboBox = new JComboBox<>(new String[]{"INCREMENTO_DECREMENTO", "CONSTANTE", "INCREMENTO", "CADA_2_DIAS"});
+        panelDatos.add(suministroComidaComboBox);
 
         panelDatos.add(new JLabel("Cantidad inicial de comida:"));
         JTextField comidaInicialField = new JTextField();
@@ -204,13 +208,14 @@ public class GUI implements ActionListener {
             Date inicio = Date.valueOf(inicioField.getText());
             int numeroInicial = Integer.parseInt(numeroInicialField.getText());
             int temperatura = Integer.parseInt(temperaturaField.getText());
-            Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf(((String) luminosidadComboBox.getSelectedItem()).toUpperCase());
             Comida comida = new Comida(Integer.parseInt(comidaInicialField.getText()),
                     Integer.parseInt(comidaMaximaField.getText()), Integer.parseInt(comidaFinalField.getText()),
                     Integer.parseInt(diaMaximoField.getText()));
             int duracion = Integer.parseInt(duracionField.getText());
+            Poblacion.Luminosidad luminosidad = Poblacion.Luminosidad.valueOf(((String) luminosidadComboBox.getSelectedItem()));
+            Poblacion.SuministroComida suministroComida = Poblacion.SuministroComida.valueOf(((String) suministroComidaComboBox.getSelectedItem()));
 
-            poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, luminosidad, comida, duracion);
+            poblacion = new Poblacion(nombre, inicio, numeroInicial, temperatura, comida, duracion, luminosidad, suministroComida);
             poblacionesGUI.add(poblacion);
 
             JOptionPane.showMessageDialog(frame, "Confirmado", " ", JOptionPane.INFORMATION_MESSAGE);
